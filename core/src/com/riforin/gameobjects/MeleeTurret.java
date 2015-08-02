@@ -1,0 +1,43 @@
+package com.riforin.gameobjects;
+
+/** 
+ * Standard class for melee range turrets.
+ * @author William Zhuang
+ */
+public class MeleeTurret extends Turret {
+	
+	/** Melee turret constructor. */
+	public MeleeTurret(int tileX0, int tileY0) {
+		super(tileX0, tileY0);
+		range = 2;
+		damage = 2;
+		atkSpeed = 2;
+	}
+	
+	/** 
+	 * Updates turret. 
+	 * @param delta Float synchronizing time delay. 
+	 */
+	public void update(float delta) {
+		if (timer == 0) {
+			attack();
+			timer = atkSpeed + 1;
+		}
+		
+		timer -= 1;
+	}
+	
+	public void attack() {
+		// TODO: Find the nearest enemy within range and attack it. 
+	}
+	
+	/**
+	 * Updates the turrets properties. 
+	 * @param range Range to be added/removed. 
+	 * @param damage Damage to be added/removed.
+	 * @param atkSpeed Attack Speed to be added/removed.
+	 */
+	public void givePart(int range, int damage, int atkSpeed) {
+		
+	}
+}

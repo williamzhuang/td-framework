@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="zeldatiles" tilewidth="16" tileheight="16">
+  <image source="zeldatiles.png" width="1011" height="848"/>
+ </tileset>
+ <layer name="Path" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBg+wJSFgaGBkTaY1mA42kGruEC3g55+Gup2jOaPwWNHPTNt4wMA/Xsynw==
+  </data>
+ </layer>
+ <layer name="Start" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBg+wJRloF0wCkbBKBgFgwMAACZ3ADo=
+  </data>
+ </layer>
+ <layer name="End" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRQG/QzERb8wE3ugCG
+  </data>
+ </layer>
+ <layer name="TowerSpots" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKA9YGRiWADEMJpmmA5+oKnbh5sd9IiP4RhutLSD1vEx1MOHnnbQOj4AiPSd7A==
+  </data>
+ </layer>
+</map>
