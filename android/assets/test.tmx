@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="advancewar" tilewidth="32" tileheight="32">
+  <image source="advancewarstiles.png" width="960" height="640"/>
+ </tileset>
+ <layer name="Path" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF5IBvdLCjm5GBQZWBPNzDSHv3rSLDDhFG/BgdnACKnSTRHmzmoNuPz13EmE9IHT7ziLWDWEBsWFJiB7mAlLimp930csNAAgCh1wnw
+  </data>
+ </layer>
+ <layer name="Start" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBh+4MZAO2AUjIJRMAoGGAAARNgA2Q==
+  </data>
+ </layer>
+ <layer name="End" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKRCRIH2gE0BABZOABi
+  </data>
+ </layer>
+ <layer name="TowerSpots" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAPYINiZDYbDjWkYmT9uMyjxHx8duDzG7l2UAsQY0c4I3Y1pIQHPjtI9SOp5uCyH5d+YtxFrFp86gi5nRg7iPEvPkCuHfjMIjU9EGsmKe6jdn6ixA5i45wcd1EKALqFBN8=
+  </data>
+ </layer>
+ <layer name="Graphical" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJyzZWBgsKUDboLiXUhsEN7KyMCwDYi3M6KKk4KR7bjOAAHX0dRUUWA+uh1XoXZ8B+IfSGoOU2A+sh0/gfgzA3bwD4c4NoDPDnFgeAgCMTuWcCHGH61E2GEKNPssmpw6UMyZEeIPZ0ZUfBBN7WI8fkFPV8gYpl4GaKY8EM8CYiuoPxux2APCB4B4MpocLjtAftBCCjdQ2tqBZAcI/wXiaBx2MRBhB7qfQXZcwxJXlYwQu5DDcTKa+4i1AxRecliwPBF5B5cd6G7DFdfY8mcFWpjii3NsGN3uGCzumMZInD+IwdOBZs0A4pkEwose5S0IAwBrOZs3
+  </data>
+ </layer>
+</map>

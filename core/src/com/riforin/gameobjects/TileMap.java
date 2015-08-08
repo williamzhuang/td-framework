@@ -4,8 +4,8 @@ public class TileMap {
 	
 	public Tile[][] tileArray;
 	
-	public TileMap(int size) {
-		tileArray = new Tile[size][];
+	public TileMap(int colsize, int rowsize) {
+		tileArray = new Tile[colsize][rowsize];
 	}
 	
 	public void place(Tile tile, int x, int y) {

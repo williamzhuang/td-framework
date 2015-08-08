@@ -7,9 +7,9 @@ import com.riforin.towerdefense.towerdefense;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "Myotd";
-		config.width = 408;
-		config.height = 272;
+		config.title = "Tower Defense";
+		config.width = 800;
+		config.height = 480;
 		new LwjglApplication(new towerdefense(), config);
 	}
 }

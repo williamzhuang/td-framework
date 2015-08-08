@@ -17,7 +17,7 @@ public class GameWorld {
 	 * GameWorld constructor.
 	 * @param midPointX X coordinate of the midpoint of the screen. 
 	 */
-	public GameWorld(int midPointY, TileMap currentMap0) {
+	public GameWorld(TileMap currentMap0) {
 		// TODO: Initialize all object handlers.
 		currentMap = currentMap0;
 		

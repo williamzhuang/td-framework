@@ -1,5 +1,14 @@
 package com.riforin.gameobjects;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.riforin.tdhelpers.AssetLoader;
+import com.riforin.ui.UIManager;
+
 /**
  * Class for a tile. Tiles are designated squares within
  * a tileMap.
@@ -7,29 +16,48 @@ package com.riforin.gameobjects;
  *
  */
 
-public class Tile {
-	public int x;					// x Location of tile to draw.
-	public int y;					// y location of tile to draw.
+public class Tile extends Actor{
+	
+	public Vector2 position;
 	public int tileX;				// tileMap X coordinate.
 	public int tileY;				// tileMap Y coordinate.
 	public boolean occupied;
-	public final int TILE_SIZE = 16;
+	public final int TILE_SIZE = 32;
 	public Turret turret;			// Designates what turret is on this tile.
+	private final UIManager manager;
+	private Tile thisTile;			// Really weird way to do this because you cannot call this in the InputListener.
 	
-	public enum Type {
+	public enum TILETYPE {
 		start, end, path, obstacle, tower
 	}
-	public Type type;
+	public TILETYPE type;
+	
+	private int[] selectedCoords;
 	
 	/** Tile constructor. */
-	public Tile(int x0, int y0, Type type0) {
-		x = x0 * TILE_SIZE;
-		y = y0 * TILE_SIZE;
+	public Tile(int x0, int y0, TILETYPE type0, int[] selectedCoords, final UIManager manager) {
+		position = new Vector2(x0 * TILE_SIZE, y0 * TILE_SIZE);
 		tileX = x0;
 		tileY = y0;
 		occupied = false;
 		turret = null;
 		type = type0;
+		this.selectedCoords = selectedCoords;
+		thisTile = this;
+		this.manager = manager;
+		
+		// Actor information.
+		setBounds(x0 * TILE_SIZE, y0 * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				if (type == TILETYPE.tower) {
+					((Tile)event.getTarget()).selectedCoords[0] = (int) position.x;
+					((Tile)event.getTarget()).selectedCoords[1] = (int) position.y;
+					manager.show(thisTile);
+				}
+				return true;
+			}
+		});
 	}
 
 	public boolean isOccupied() {
@@ -50,13 +78,21 @@ public class Tile {
 	 * @return Returns the turret occupying this space or null
 	 * 		   if no such turret exists.
 	 */
-	public Turret remove() {
+	public Turret removeTurret() {
 		if (isOccupied()) {
 			turret = null;
 			occupied = false;
 		} 
 		
 		return null;
+	}
+	
+	public TILETYPE getType() {
+		return type;
+	}
+	
+	public Vector2 getPosition() {
+		return position;
 	}
 	
 }
