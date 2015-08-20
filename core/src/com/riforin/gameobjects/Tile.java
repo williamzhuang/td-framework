@@ -23,13 +23,15 @@ public class Tile extends Actor{
 	public int tileY;				// tileMap Y coordinate.
 	public boolean occupied;
 	public final int TILE_SIZE = 32;
-	public Turret turret;			// Designates what turret is on this tile.
+	public Tower tower;			// Designates what tower is on this tile.
 	private final UIManager manager;
 	private Tile thisTile;			// Really weird way to do this because you cannot call this in the InputListener.
+	private Tile nextTile;
 	
 	public enum TILETYPE {
 		start, end, path, obstacle, tower
 	}
+	
 	public TILETYPE type;
 	
 	private int[] selectedCoords;
@@ -40,10 +42,11 @@ public class Tile extends Actor{
 		tileX = x0;
 		tileY = y0;
 		occupied = false;
-		turret = null;
+		tower = null;
 		type = type0;
 		this.selectedCoords = selectedCoords;
 		thisTile = this;
+		nextTile = null;
 		this.manager = manager;
 		
 		// Actor information.
@@ -51,9 +54,12 @@ public class Tile extends Actor{
 		addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if (type == TILETYPE.tower) {
+					manager.closeAll();
 					((Tile)event.getTarget()).selectedCoords[0] = (int) position.x;
 					((Tile)event.getTarget()).selectedCoords[1] = (int) position.y;
 					manager.show(thisTile);
+				} else if (type != TILETYPE.tower) {
+					manager.closeAll();
 				}
 				return true;
 			}
@@ -65,26 +71,27 @@ public class Tile extends Actor{
 	}
 	
 	/** 
-	 * Places a turret in this tile. 
-	 * @param turret0 Turret to be placed in this tile. 
+	 * Places a tower in this tile. 
+	 * @param tower0 tower to be placed in this tile. 
 	 */
-	public void occupy(Turret turret0) {
+	public void occupy(Tower tower0) {
 		occupied = true;
-		turret = turret0;
+		tower = tower0;
 	}
 	
 	/**
-	 * Removes turret occupying this tile. 
-	 * @return Returns the turret occupying this space or null
-	 * 		   if no such turret exists.
+	 * Removes tower occupying this tile. 
+	 * @return Returns the tower occupying this space or null
+	 * 		   if no such tower exists.
 	 */
-	public Turret removeTurret() {
+	public Tower removetower() {
+		Tower tempTower = tower;
 		if (isOccupied()) {
-			turret = null;
+			tower = null;
 			occupied = false;
 		} 
 		
-		return null;
+		return tempTower;
 	}
 	
 	public TILETYPE getType() {
@@ -93,6 +100,22 @@ public class Tile extends Actor{
 	
 	public Vector2 getPosition() {
 		return position;
+	}
+	
+	public int getTileX() {
+		return tileX;
+	}
+	
+	public int getTileY() {
+		return tileY;
+	}
+	
+	public void setNextTile(Tile nextTile) {
+		this.nextTile =  nextTile;
+	}
+	
+	public Tile getNextTile() {
+		return nextTile;
 	}
 	
 }

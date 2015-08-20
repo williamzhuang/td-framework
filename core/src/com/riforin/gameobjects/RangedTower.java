@@ -4,9 +4,9 @@ package com.riforin.gameobjects;
  * @author William Zhuang
  * 
  */
-public class RangedTurret extends Turret {
+public class RangedTower extends Tower {
 
-	public RangedTurret(int x0, int y0) {
+	public RangedTower(int x0, int y0) {
 		super(x0, y0);
 		range = 3;
 		damage = 1;

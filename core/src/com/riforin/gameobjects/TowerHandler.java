@@ -6,16 +6,16 @@ import java.util.ArrayList;
  * @author William Zhuang
  *
  */
-public class TurretHandler {
+public class TowerHandler {
 	
 	public TileMap tileMap;
-	public ArrayList<Turret> turretArray;
+	public ArrayList<Tower> turretArray;
 	
 	/** 
 	 * TurretHandler constructor. 
 	 * @param tileMap
 	 */
-	public TurretHandler(TileMap tileMap0) {
+	public TowerHandler(TileMap tileMap0) {
 		tileMap = tileMap0;
 	}
 	
@@ -24,9 +24,7 @@ public class TurretHandler {
 	 * @param delta
 	 */
 	public void update(float delta) {
-		for (Turret turret : turretArray) {
-			turret.update(delta);
-		}
+
 	}
 	
 	/**
@@ -34,7 +32,7 @@ public class TurretHandler {
 	 * @param x X tile coordinate
 	 * @param y Y tile coordinate
 	 */
-	public void placeTurret(int x, int y, Turret turret) {
+	public void placeTurret(int x, int y, Tower turret) {
 		tileMap.get(x, y).occupy(turret);
 		turretArray.add(turret);
 	}

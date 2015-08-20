@@ -1,5 +1,10 @@
 package com.riforin.screens;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.BaseTween;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -11,11 +16,15 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.riforin.gameobjects.Enemy;
+import com.riforin.gameobjects.EnemyHandler;
+import com.riforin.gameobjects.EnemyTween;
 import com.riforin.gameobjects.Tile;
 import com.riforin.gameobjects.Tile.TILETYPE;
 import com.riforin.gameobjects.TileMap;
@@ -28,10 +37,11 @@ public class GameScreen implements Screen {
 	private GameWorld world;
 	private float runTime;
 
+	// Tile things
 	private TiledMap tiledMap;
 	private float tileSize;
-	
 	private TileMap currentMap;
+	private Tile startingTile;
 	
 	private Stage stage;
 	
@@ -41,10 +51,19 @@ public class GameScreen implements Screen {
 	private ShapeRenderer shapeRenderer;
 
 	private SpriteBatch batcher;
+	private Group tileGroup;			// Furthest back group
+	private Group enemyGroup;
+	private Group unitGroup;			// Units.
+	private Group uiGroup;				// Renders ui and backgrounds.
+	
+	// TODO: Put these two together? 
+	// Issue is that the EnemyTween has to have access to the manager.
+	private EnemyHandler enemyHandler; // Handles enemy pathing/waves.
+	private TweenManager enemyTweenManager;  // Handles the movement of enemies.
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	
-	private UIManager manager;
+	private UIManager uiManager;
 	
 	public GameScreen() {
 		
@@ -67,18 +86,26 @@ public class GameScreen implements Screen {
 		// Map is displayed at double its actual size. 
 		camera.setToOrtho(false);
 		
+		
+		tileGroup = new Group();
+		unitGroup = new Group();
+		uiGroup = new Group();
+		
 		stage = new Stage(new FitViewport(800, 480, camera));
+		
+		stage.addActor(tileGroup);
+		stage.addActor(enemyGroup);
+		stage.addActor(unitGroup);
+		stage.addActor(uiGroup);
+		
 		Gdx.input.setInputProcessor(stage);
 		// Initialize the UI Manager
-		manager = new UIManager(stage);
+		uiManager = new UIManager(uiGroup, unitGroup);
 		
 		// Initialize an empty map and load it
 		currentMap = new TileMap(25, 15);
 		
 		loadMap();
-		
-		// Pass the map into world
-		world = new GameWorld(currentMap);
 		
 		// Rendering related processes
 
@@ -92,7 +119,9 @@ public class GameScreen implements Screen {
 		// Attach the map's level to a renderer.
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		
-		
+		// Initialize enemy handler.
+		enemyHandler = new EnemyHandler(currentMap, 1, startingTile, enemyGroup);
+		setupEnemyTween();
 	}
 
 	private void loadMap() {
@@ -117,47 +146,49 @@ public class GameScreen implements Screen {
 			for (int col = 0; col < graphicalLayer.getWidth(); col++) {
 				
 				// If there is no tile, assign an obstacle tile
-				thisTile = new Tile(col, row, TILETYPE.obstacle, selected, manager);
+				thisTile = new Tile(col, row, TILETYPE.obstacle, selected, uiManager);
 				
 				// Load tower spots
 				if (towerLayer.getCell(col, row) != null) {
-					thisTile = new Tile(col, row, TILETYPE.tower, selected, manager);
+					thisTile = new Tile(col, row, TILETYPE.tower, selected, uiManager);
 				}
 				
 				// Load the path tiles
 				if (pathLayer.getCell(col, row) != null) {
-					thisTile = new Tile(col, row, TILETYPE.path, selected, manager); 
+					thisTile = new Tile(col, row, TILETYPE.path, selected, uiManager);
 				}
 
 				// Load the start tile
 				if (startLayer.getCell(col, row) != null) {
-					thisTile = new Tile(col, row, TILETYPE.start, selected, manager);
-					continue;
+					thisTile = new Tile(col, row, TILETYPE.start, selected, uiManager);
+					startingTile = thisTile;
 				}
 				
 				// Load the end tile
 				if (endLayer.getCell(col, row) != null) {
-					thisTile = new Tile(col, row, TILETYPE.end, selected, manager);
-					continue;
+					thisTile = new Tile(col, row, TILETYPE.end, selected, uiManager);
 				}
 				
 				// TODO: Remove this and see if it's necessary
 				thisTile.setTouchable(Touchable.enabled);
-				stage.addActor(thisTile);
+				tileGroup.addActor(thisTile);
 				
 				currentMap.place(thisTile, col, row);
 			}
 		}
 		
-		
+		// Assign directions to every tile.
+		currentMap.assignNextTiles(startingTile);
+	}
+	
+	private void setupEnemyTween() {
+		Tween.registerAccessor(Enemy.class, new EnemyTween());
+		enemyTweenManager = new TweenManager();
 	}
 
 	@Override
 	public void render(float delta) {
 		runTime += delta;
-		world.update(delta);
-		stage.act(delta);
-		
 		
 		// Fills screen with black to prevent flickering.
 		Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -168,12 +199,7 @@ public class GameScreen implements Screen {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 		
-		
-		
-		batcher.begin();
-		batcher.draw(AssetLoader.selector, selected[0], selected[1], 32, 32);
-		
-		batcher.end();
+		stage.act(delta);
 		stage.draw();
 		
 		

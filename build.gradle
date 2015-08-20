@@ -56,6 +56,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
+        compile fileTree(dir: '../libs', include: '*.jar')
     }
 }
 
@@ -70,6 +71,7 @@ project(":core") {
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.0"
         compile "com.underwaterapps.overlap2druntime:overlap2d-runtime-libgdx:0.1.0"
         compile "com.kotcrab.vis:vis-ui:0.7.7"
+        compile fileTree(dir: '../lib', include: '*.jar')
     }
 }
 

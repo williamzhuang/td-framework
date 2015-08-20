@@ -1,11 +1,18 @@
 package com.riforin.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.riforin.gameobjects.Infantry;
+import com.riforin.gameobjects.RangedTower;
 import com.riforin.gameobjects.Tile;
+import com.riforin.gameobjects.Tile.TILETYPE;
+import com.riforin.gameobjects.Tower;
 import com.riforin.tdhelpers.AssetLoader;
 
 public class Button extends Actor{
@@ -20,18 +27,37 @@ public class Button extends Actor{
 	}
 	
 	private BUTTONTYPE type;
-	private UIManager manager;
+	private final UIManager manager;
 	
-	public Button(BUTTONTYPE type, UIManager manager) {
+	public Button(BUTTONTYPE type, final UIManager manager) {
 		position = new Vector2(0, 0);
 		this.type = type;
 		
 		if (type == BUTTONTYPE.tower) {
 			textureRegion = AssetLoader.newtower;
+			addListener(new InputListener() {
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+					RangedTower toPlace = new RangedTower(Math.round(affectedTile.getTileX()), Math.round(affectedTile.getTileY()));
+					affectedTile.occupy(toPlace);
+					manager.createTower(toPlace);
+					manager.closeAll();
+					return true;
+				}
+			});
 		}
 		
 		else if (type == BUTTONTYPE.infantry) {
 			textureRegion = AssetLoader.newinfantry;
+			addListener(new InputListener() {
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+					
+					Infantry toPlace = new Infantry(Math.round(affectedTile.getTileX()), Math.round(affectedTile.getTileY()));
+					affectedTile.occupy(toPlace);
+					manager.createInfantry(toPlace);
+					manager.closeAll();
+					return true;
+				}
+			});
 		}
 		
 		else if (type == BUTTONTYPE.upgrade) {
@@ -40,14 +66,22 @@ public class Button extends Actor{
 		
 		else if (type == BUTTONTYPE.destroy) {
 			textureRegion = AssetLoader.destroy;
+			addListener(new InputListener() {
+				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+					// TODO: Give parts back?
+					Tower removedTower = affectedTile.removetower();
+					removedTower.remove();
+					manager.closeAll();
+					return true;
+				}
+			});
 		}
 		
 		else if (type == BUTTONTYPE.wheel){
 			setOrigin(40, 40);
 			textureRegion = AssetLoader.wheel;
+			setTouchable(Touchable.disabled);
 		}
-		
-		
 		
 		this.manager = manager;
 	}
@@ -57,7 +91,8 @@ public class Button extends Actor{
 		
 		if (type == BUTTONTYPE.wheel) {
 			position.x = affectedTile.getPosition().x - 64;
-			position.y = affectedTile.getPosition().y - 64; 
+			position.y = affectedTile.getPosition().y - 64;
+			
 		} else if ((type == BUTTONTYPE.infantry) || (type == BUTTONTYPE.upgrade)) {
 			position.x = affectedTile.getPosition().x - 96;
 			position.y = affectedTile.getPosition().y - 16;

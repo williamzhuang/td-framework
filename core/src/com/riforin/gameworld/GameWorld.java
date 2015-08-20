@@ -1,7 +1,7 @@
 package com.riforin.gameworld;
 
 import com.riforin.gameobjects.TileMap;
-import com.riforin.gameobjects.TurretHandler;
+import com.riforin.gameobjects.TowerHandler;
 
 /** 
  * Helper class that updates all objects. 
@@ -11,7 +11,7 @@ import com.riforin.gameobjects.TurretHandler;
 public class GameWorld {
 	
 	TileMap currentMap;
-	TurretHandler turretHandler;
+	TowerHandler turretHandler;
 	
 	/**
 	 * GameWorld constructor.

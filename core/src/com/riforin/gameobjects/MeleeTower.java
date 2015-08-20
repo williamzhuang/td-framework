@@ -4,10 +4,10 @@ package com.riforin.gameobjects;
  * Standard class for melee range turrets.
  * @author William Zhuang
  */
-public class MeleeTurret extends Turret {
+public class MeleeTower extends Tower {
 	
 	/** Melee turret constructor. */
-	public MeleeTurret(int tileX0, int tileY0) {
+	public MeleeTower(int tileX0, int tileY0) {
 		super(tileX0, tileY0);
 		range = 2;
 		damage = 2;
