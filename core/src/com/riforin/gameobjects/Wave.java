@@ -8,21 +8,21 @@ import com.riforin.gameobjects.Enemy.ENEMYTYPE;
 
 public class Wave {
 	
-	ENEMYTYPE[] enemies;
-	int[] numbers;
+	ArrayList<ENEMYTYPE> enemies;
+	ArrayList<Integer> numbers;
 	int waveNumber;
 	
-	public Wave(int waveNumber, ENEMYTYPE[] enemytypes, int[] numbers) {
+	public Wave(int waveNumber, ArrayList<ENEMYTYPE> enemytypes, ArrayList<Integer> numbers) {
 		this.waveNumber = waveNumber;
 		this.enemies = enemies;
 		this.numbers = numbers;
 	}
 	
-	public ENEMYTYPE[] getEnemies() {
+	public ArrayList<ENEMYTYPE> getEnemies() {
 		return enemies;
 	}
 	
-	public int[] getNumbers() {
+	public ArrayList<Integer> getNumbers() {
 		return numbers;
 	}
 }

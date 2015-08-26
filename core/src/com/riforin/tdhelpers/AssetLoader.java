@@ -16,6 +16,7 @@ public class AssetLoader {
 	public static TextureRegion newinfantry;
 	public static TextureRegion upgrade;
 	public static TextureRegion wheel;
+	public static TextureRegion nextWave;
 	
 	
 	// Tower textures
@@ -38,6 +39,7 @@ public class AssetLoader {
 		newtower = new TextureRegion(texture, 128, 0, 64, 64);
 		upgrade = new TextureRegion(texture, 192, 0, 64, 64);
 		wheel = new TextureRegion(texture, 0, 96, 160, 160);
+		nextWave = new TextureRegion(texture, 352, 0, 128, 64);
 		
 		// Loading unit textures. 
 		knight = new TextureRegion(texture, 256, 0, 32, 64);

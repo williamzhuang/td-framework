@@ -2,67 +2,80 @@ package com.riforin.gameobjects;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.riforin.gameobjects.Enemy;
 import com.riforin.gameobjects.Enemy.ENEMYTYPE;
+
 /**
  * Handles spawning and behavior of all enemies.
+ * 
  * @author William Zhuang
- *
+ * 
  */
 public class EnemyHandler {
-	
+
 	Tile startingTile;
 	TileMap tileMap;
 	int startTileX;
 	int startTileY;
 	Group enemyGroup;
-	
+	int waveNumber;
+
 	ArrayList<Wave> waveList;
+
 	// TODO: Some UI Buttons that start the wave.
 	/** EnemyHandler constructor */
-	public EnemyHandler(TileMap tileMap, int mapNumber, Tile startingTile, Group enemyGroup) {
+	public EnemyHandler(TileMap tileMap, int mapNumber, Tile startingTile,
+			Group enemyGroup) {
 		this.tileMap = tileMap;
-		
 		this.startingTile = startingTile;
 		startTileX = startingTile.getTileX();
 		startTileY = startingTile.getTileY();
-		
+
 		waveList = new ArrayList<Wave>();
 		this.enemyGroup = enemyGroup;
+		
+		waveNumber = 0;
+		
+		loadWaves(mapNumber);
 	}
-	
+
+	// TODO: Load waves from a text file or something like that.
 	private void loadWaves(int mapNumber) {
-		if (mapNumber == 1) {
+		if (mapNumber == 0) {
 			// TODO: make this specific to the map number.
-			ENEMYTYPE[] enemyTypes = {ENEMYTYPE.flame};
-			int[] numbers = {5};
-			Wave wave1 = new Wave(1, enemyTypes, numbers);
-			waveList.add(wave1);
+			ArrayList<ENEMYTYPE> enemyTypes = new ArrayList<ENEMYTYPE>();
+			enemyTypes.add(ENEMYTYPE.flame);
+			Gdx.app.log("Stars", Integer.toString(enemyTypes.size()));
+			
+			ArrayList<Integer> numbers = new ArrayList<Integer>();
+			numbers.add(5);
+			Wave wave0 = new Wave(0, enemyTypes, numbers);
+			
+			waveList.add(wave0);
 		}
 	}
-	
-	// Spawns enemies 
+
+	// Spawns enemies
 	// Have a button from the UI that starts the wave.
 	// Calls draw methods and puts enemy actors on the screen.
 	public void spawn() {
-		// TODO: Add a delay between waves.
-		int[] numbers;
-		ENEMYTYPE[] enemies;
 		
-		for (Wave wave:waveList) {
-			int counter = 0;
-			enemies = wave.getEnemies();
-			numbers = wave.getNumbers();
-			for (ENEMYTYPE enemy:enemies) {
-				singleSummon(enemy, numbers[counter]);
-				counter += 1;
-			}
+		Wave wave = waveList.get(waveNumber);
+		// TODO: Add a delay between waves / wait for input
+		ArrayList<ENEMYTYPE> enemies = wave.getEnemies();
+		ArrayList<Integer> numbers = wave.getNumbers();
+		int counter = 0;
+		
+		for (ENEMYTYPE enemy : enemies) {
+			singleSummon(enemy, numbers.get(counter));
+			counter += 1;
 		}
 	}
-	
-	// Summons a single type of enemy a single number of times 
+
+	// Summons a single type of enemy a single number of times
 	public void singleSummon(ENEMYTYPE enemy, int number) {
 		// TODO: Delay between summons.
 		ENEMYTYPE enemyType = enemy;
@@ -71,5 +84,4 @@ public class EnemyHandler {
 			enemyGroup.addActor(tempEnemy);
 		}
 	}
-	
 }

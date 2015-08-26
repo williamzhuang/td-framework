@@ -2,6 +2,7 @@ package com.riforin.gameobjects;
 
 import aurelienribon.tweenengine.Tween;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -66,11 +67,12 @@ public class Enemy extends Actor {
 		return position.y;
 	}
 	
-	public void move() {
+	public void act() {
 		// Tween between the current position and the center of the next tile.
 		// Once the next tile's center has been reached, change the current Tile and 
 		// tween to the next tile until the end is reached.
 		// At the end, destroy itself. 
+		
 		if (currentTile.getType() == TILETYPE.end) {
 			this.remove();
 		}
@@ -80,5 +82,10 @@ public class Enemy extends Actor {
 		}
 		
 		Tween.to(this, EnemyTween.xPOS, speed).target(currentTile.getX());
+	}
+	
+	// Moves this enemy unit from tile to tile and also draws this stuff.
+	public void draw(Batch batch, float alpha) {
+		batch.draw(textureRegion, position.x, position.y, textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 	}
 }

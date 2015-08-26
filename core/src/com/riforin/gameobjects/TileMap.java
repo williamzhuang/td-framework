@@ -1,6 +1,7 @@
 package com.riforin.gameobjects;
 
 
+import com.badlogic.gdx.Gdx;
 import com.riforin.gameobjects.Tile.TILETYPE;
 
 public class TileMap {
@@ -24,16 +25,18 @@ public class TileMap {
 	public void assignNextTiles(Tile startingTile) {
 		
 		Tile currentTile = startingTile;
+		Tile leftTile = getLeftTile(startingTile);
+		Tile rightTile = getRightTile(startingTile);
+		Tile upTile = getUpTile(startingTile);
+		Tile downTile = getDownTile(startingTile);
+		
 		
 		while (currentTile.getType() != TILETYPE.end) {
-			int currentTileX = currentTile.getTileX();
-			int currentTileY = currentTile.getTileY();
 			
-			Tile leftTile = getLeftTile(currentTile);
-			Tile rightTile = getRightTile(currentTile);
-			Tile upTile = getUpTile(currentTile);
-			Tile downTile = getDownTile(currentTile);
-			
+			leftTile = getLeftTile(currentTile);
+			rightTile = getRightTile(currentTile);
+			upTile = getUpTile(currentTile);
+			downTile = getDownTile(currentTile);
 			// TODO: Branching paths
 			// Search in four directions around this one and assign directions to every single one.
 			if (leftTile.getType() == TILETYPE.path) {
@@ -42,21 +45,15 @@ public class TileMap {
 					currentTile = leftTile;
 					continue;
 				}
-			} 
-			if (rightTile.getType() == TILETYPE.path) {
+			}
+			if ((rightTile.getType() == TILETYPE.path) || (rightTile.getType() == TILETYPE.end)) {
 				if (rightTile.getNextTile() == null) {
 					currentTile.setNextTile(rightTile);
 					currentTile = rightTile;
 					continue;
 				}
 			}
-			if (upTile.getType() == TILETYPE.path) {
-				if (upTile.getNextTile() == null) {
-					upTile.setNextTile(upTile);
-					currentTile = upTile;
-					continue;
-				}
-			}
+			
 			if (downTile.getType() == TILETYPE.path){
 				if (downTile.getNextTile() == null) {
 					downTile.setNextTile(downTile);
@@ -64,6 +61,17 @@ public class TileMap {
 					continue;
 				}
 			}
+			
+			if (upTile.getType() == TILETYPE.path) {
+				if (upTile.getNextTile() == null) {
+					upTile.setNextTile(upTile);
+					currentTile = upTile;
+					continue;
+				}
+			}
+			
+			
+			
 		}
 	}
 	

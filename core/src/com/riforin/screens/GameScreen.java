@@ -30,6 +30,7 @@ import com.riforin.gameobjects.Tile.TILETYPE;
 import com.riforin.gameobjects.TileMap;
 import com.riforin.gameworld.GameWorld;
 import com.riforin.tdhelpers.AssetLoader;
+import com.riforin.ui.HUD;
 import com.riforin.ui.UIManager;
 
 public class GameScreen implements Screen {
@@ -64,9 +65,10 @@ public class GameScreen implements Screen {
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	
 	private UIManager uiManager;
+	private HUD hud;
 	
 	public GameScreen() {
-		
+		Gdx.app.log("GameScreen", "created");
 		// Information about the screen. 
 		float screenWidth = Gdx.graphics.getWidth();
 		float screenHeight = Gdx.graphics.getHeight();
@@ -86,8 +88,8 @@ public class GameScreen implements Screen {
 		// Map is displayed at double its actual size. 
 		camera.setToOrtho(false);
 		
-		
 		tileGroup = new Group();
+		enemyGroup = new Group();
 		unitGroup = new Group();
 		uiGroup = new Group();
 		
@@ -99,16 +101,21 @@ public class GameScreen implements Screen {
 		stage.addActor(uiGroup);
 		
 		Gdx.input.setInputProcessor(stage);
-		// Initialize the UI Manager
+		// Initialize the UIManager
 		uiManager = new UIManager(uiGroup, unitGroup);
 		
-		// Initialize an empty map and load it
-		currentMap = new TileMap(25, 15);
-		
+		// Initialize an empty map and fill it
+		currentMap = new TileMap(25, 15);		
 		loadMap();
+				
+		// Initialize enemy handler.
+		enemyHandler = new EnemyHandler(currentMap, 0, startingTile, enemyGroup);
+		setupEnemyTween();
+				
+		// Initialize the HUD
+		hud = new HUD(uiGroup, enemyHandler); 
 		
 		// Rendering related processes
-
 		batcher = new SpriteBatch();
 		// Attach batcher to camera
 		batcher.setProjectionMatrix(camera.combined);
@@ -119,17 +126,12 @@ public class GameScreen implements Screen {
 		// Attach the map's level to a renderer.
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		
-		// Initialize enemy handler.
-		enemyHandler = new EnemyHandler(currentMap, 1, startingTile, enemyGroup);
-		setupEnemyTween();
+		
 	}
 
 	private void loadMap() {
-		// Load map.
-		// TODO: Modify this to account for multiple maps
 		
 		tiledMap = new TmxMapLoader().load("test.tmx");
-		
 
 		// Get information from the map.
 		TiledMapTileLayer graphicalLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Graphical");
@@ -176,7 +178,6 @@ public class GameScreen implements Screen {
 				currentMap.place(thisTile, col, row);
 			}
 		}
-		
 		// Assign directions to every tile.
 		currentMap.assignNextTiles(startingTile);
 	}
@@ -191,7 +192,7 @@ public class GameScreen implements Screen {
 		runTime += delta;
 		
 		// Fills screen with black to prevent flickering.
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClearColor(0, 0, 0, 0); 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();
@@ -203,6 +204,10 @@ public class GameScreen implements Screen {
 		stage.draw();
 		
 		
+	}
+	
+	public EnemyHandler getEnemyHandler() {
+		return enemyHandler;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import com.riforin.gameobjects.Tile.TILETYPE;
 import com.riforin.gameobjects.Tower;
 import com.riforin.tdhelpers.AssetLoader;
 
-public class Button extends Actor{
+public class UIButton extends Actor{
 	
 	Vector2 position;
 	Tile affectedTile;
@@ -23,13 +23,13 @@ public class Button extends Actor{
 	TextureRegion textureRegion;
 	
 	public enum BUTTONTYPE {
-		tower, infantry, upgrade, destroy, wheel
+		tower, infantry, upgrade, destroy, wheel;
 	}
 	
 	private BUTTONTYPE type;
 	private final UIManager manager;
 	
-	public Button(BUTTONTYPE type, final UIManager manager) {
+	public UIButton(BUTTONTYPE type, final UIManager manager) {
 		position = new Vector2(0, 0);
 		this.type = type;
 		
@@ -61,6 +61,8 @@ public class Button extends Actor{
 		}
 		
 		else if (type == BUTTONTYPE.upgrade) {
+			// TODO: Open a list of selectable parts to upgrade.
+			// Upon part selection, apply the upgrade to the tower and remove the part from the inventory. 
 			textureRegion = AssetLoader.upgrade;
 		}
 		
@@ -77,7 +79,7 @@ public class Button extends Actor{
 			});
 		}
 		
-		else if (type == BUTTONTYPE.wheel){
+		else if (type == BUTTONTYPE.wheel) {
 			setOrigin(40, 40);
 			textureRegion = AssetLoader.wheel;
 			setTouchable(Touchable.disabled);
