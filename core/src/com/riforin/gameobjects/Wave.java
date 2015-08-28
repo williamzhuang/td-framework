@@ -12,9 +12,9 @@ public class Wave {
 	ArrayList<Integer> numbers;
 	int waveNumber;
 	
-	public Wave(int waveNumber, ArrayList<ENEMYTYPE> enemytypes, ArrayList<Integer> numbers) {
+	public Wave(int waveNumber, ArrayList<ENEMYTYPE> enemyTypes, ArrayList<Integer> numbers) {
 		this.waveNumber = waveNumber;
-		this.enemies = enemies;
+		this.enemies = enemyTypes;
 		this.numbers = numbers;
 	}
 	

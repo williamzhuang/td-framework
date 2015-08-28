@@ -1,5 +1,6 @@
 package com.riforin.gameobjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -112,9 +113,11 @@ public class Tile extends Actor{
 	
 	public void setNextTile(Tile nextTile) {
 		this.nextTile =  nextTile;
+		
 	}
 	
 	public Tile getNextTile() {
+		
 		return nextTile;
 	}
 	

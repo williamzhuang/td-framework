@@ -39,39 +39,29 @@ public class TileMap {
 			downTile = getDownTile(currentTile);
 			// TODO: Branching paths
 			// Search in four directions around this one and assign directions to every single one.
-			if (leftTile.getType() == TILETYPE.path) {
-				if (leftTile.getNextTile() == null) {
-					currentTile.setNextTile(leftTile);
-					currentTile = leftTile;
-					continue;
-				}
-			}
-			if ((rightTile.getType() == TILETYPE.path) || (rightTile.getType() == TILETYPE.end)) {
-				if (rightTile.getNextTile() == null) {
-					currentTile.setNextTile(rightTile);
-					currentTile = rightTile;
-					continue;
-				}
+			if ((leftTile.getType() == TILETYPE.path) && (leftTile.getNextTile() == null)) {
+				currentTile.setNextTile(leftTile);
+				currentTile = leftTile;
+				continue;
 			}
 			
-			if (downTile.getType() == TILETYPE.path){
-				if (downTile.getNextTile() == null) {
-					downTile.setNextTile(downTile);
-					currentTile = downTile;
-					continue;
-				}
+			if (((rightTile.getType() == TILETYPE.path) && (rightTile.getNextTile() == null)) || (rightTile.getType() == TILETYPE.end)) {
+				currentTile.setNextTile(rightTile);
+				currentTile = rightTile;
+				continue;
 			}
 			
-			if (upTile.getType() == TILETYPE.path) {
-				if (upTile.getNextTile() == null) {
-					upTile.setNextTile(upTile);
-					currentTile = upTile;
-					continue;
-				}
+			if ((downTile.getType() == TILETYPE.path) && (downTile.getNextTile() == null)) {
+				currentTile.setNextTile(downTile);
+				currentTile = downTile;
+				continue;
 			}
 			
-			
-			
+			if ((upTile.getType() == TILETYPE.path) && (upTile.getNextTile() == null)) {
+				currentTile.setNextTile(upTile);
+				currentTile = upTile;
+				continue;
+			}
 		}
 	}
 	

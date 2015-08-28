@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.riforin.gameobjects.Enemy;
 import com.riforin.gameobjects.EnemyHandler;
-import com.riforin.gameobjects.EnemyTween;
+import com.riforin.gameobjects.EnemyAccessor;
 import com.riforin.gameobjects.Tile;
 import com.riforin.gameobjects.Tile.TILETYPE;
 import com.riforin.gameobjects.TileMap;
@@ -109,8 +109,8 @@ public class GameScreen implements Screen {
 		loadMap();
 				
 		// Initialize enemy handler.
-		enemyHandler = new EnemyHandler(currentMap, 0, startingTile, enemyGroup);
 		setupEnemyTween();
+		enemyHandler = new EnemyHandler(currentMap, 0, startingTile, enemyGroup, enemyTweenManager);
 				
 		// Initialize the HUD
 		hud = new HUD(uiGroup, enemyHandler); 
@@ -183,13 +183,14 @@ public class GameScreen implements Screen {
 	}
 	
 	private void setupEnemyTween() {
-		Tween.registerAccessor(Enemy.class, new EnemyTween());
+		Tween.registerAccessor(Enemy.class, new EnemyAccessor());
 		enemyTweenManager = new TweenManager();
 	}
 
 	@Override
 	public void render(float delta) {
 		runTime += delta;
+		
 		
 		// Fills screen with black to prevent flickering.
 		Gdx.gl.glClearColor(0, 0, 0, 0); 
@@ -202,6 +203,7 @@ public class GameScreen implements Screen {
 		
 		stage.act(delta);
 		stage.draw();
+		enemyTweenManager.update(delta);
 		
 		
 	}

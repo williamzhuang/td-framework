@@ -1,7 +1,10 @@
 package com.riforin.gameobjects;
 
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Elastic;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -29,12 +32,18 @@ public class Enemy extends Actor {
 	
 	private ENEMYTYPE enemyType;
 	private TextureRegion textureRegion;
-	private Tile currentTile;
+	private Tile nextTile;
+	private TweenManager tweenManager;
+	private boolean spawned;
+	private Tween tempTween;
+	private TILETYPE tileType;
 	
 	/** Enemy constructor */
-	public Enemy(Tile startingTile, ENEMYTYPE enemyType) {
-		speed = 1f;
-		currentTile = startingTile;
+	public Enemy(Tile startingTile, ENEMYTYPE enemyType, TweenManager tweenManager) {
+		speed = 0.65f;
+		nextTile = startingTile.getNextTile();
+		tileType= nextTile.getType();
+		
 		tileX = startingTile.getTileX();
 		tileY = startingTile.getTileY();
 		position = new Vector2(tileX * 32, tileY * 32);
@@ -44,7 +53,8 @@ public class Enemy extends Actor {
 		if (enemyType == ENEMYTYPE.flame) {
 			textureRegion = AssetLoader.flame;
 		}
-		
+		spawned = false;
+		this.tweenManager = tweenManager;
 	}
 	
 	public ENEMYTYPE getEnemyType() {
@@ -59,29 +69,40 @@ public class Enemy extends Actor {
 		position.y = y;
 	}
 	
-	public float getX(float x) {
+	public float getX() {
 		return position.x;
 	}
 	
-	public float getY(float y) {
+	public float getY() {
 		return position.y;
 	}
 	
-	public void act() {
+	public void act(float delta) {
 		// Tween between the current position and the center of the next tile.
 		// Once the next tile's center has been reached, change the current Tile and 
 		// tween to the next tile until the end is reached.
 		// At the end, destroy itself. 
 		
-		if (currentTile.getType() == TILETYPE.end) {
+		if (nextTile.getType() == TILETYPE.end) {
 			this.remove();
 		}
 		
-		if ((currentTile.getX() == position.x) && (currentTile.getY() == position.y)) {
-			currentTile = currentTile.getNextTile();
+		if ((Math.abs(nextTile.getX() - position.x) < 0.001) && (Math.abs(nextTile.getY() - position.y) < 0.001)) {
+			nextTile = nextTile.getNextTile();
+			tempTween = Tween.to(this, EnemyAccessor.POSITION_XY, speed).target(nextTile.getX(), nextTile.getY())
+					.ease(Elastic.INOUT)
+					.start(tweenManager);
 		}
 		
-		Tween.to(this, EnemyTween.xPOS, speed).target(currentTile.getX());
+		if (!spawned) {
+			spawned = true;
+			tempTween = Tween.to(this, EnemyAccessor.POSITION_XY, speed).target(nextTile.getX(), nextTile.getY())
+					.ease(Elastic.INOUT)
+					.start(tweenManager);
+		}
+		
+		// Move to the next tile.
+		Gdx.app.log("This", position.x + " " + position.y);
 	}
 	
 	// Moves this enemy unit from tile to tile and also draws this stuff.

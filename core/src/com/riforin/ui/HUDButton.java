@@ -29,7 +29,6 @@ public class HUDButton extends Actor {
 
 		addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				Gdx.app.log("HUDButton", "Pressed");
 				enemyHandler.spawn();
 				return true;
 			}

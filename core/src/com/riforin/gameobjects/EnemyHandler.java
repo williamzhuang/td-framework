@@ -2,7 +2,10 @@ package com.riforin.gameobjects;
 
 import java.util.ArrayList;
 
+import aurelienribon.tweenengine.TweenManager;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.riforin.gameobjects.Enemy;
@@ -14,7 +17,7 @@ import com.riforin.gameobjects.Enemy.ENEMYTYPE;
  * @author William Zhuang
  * 
  */
-public class EnemyHandler {
+public class EnemyHandler extends Actor {
 
 	Tile startingTile;
 	TileMap tileMap;
@@ -24,15 +27,17 @@ public class EnemyHandler {
 	int waveNumber;
 
 	ArrayList<Wave> waveList;
+	TweenManager tweenManager;
 
 	// TODO: Some UI Buttons that start the wave.
 	/** EnemyHandler constructor */
 	public EnemyHandler(TileMap tileMap, int mapNumber, Tile startingTile,
-			Group enemyGroup) {
+			Group enemyGroup, TweenManager tweenManager) {
 		this.tileMap = tileMap;
 		this.startingTile = startingTile;
 		startTileX = startingTile.getTileX();
 		startTileY = startingTile.getTileY();
+		this.tweenManager = tweenManager;
 
 		waveList = new ArrayList<Wave>();
 		this.enemyGroup = enemyGroup;
@@ -48,10 +53,9 @@ public class EnemyHandler {
 			// TODO: make this specific to the map number.
 			ArrayList<ENEMYTYPE> enemyTypes = new ArrayList<ENEMYTYPE>();
 			enemyTypes.add(ENEMYTYPE.flame);
-			Gdx.app.log("Stars", Integer.toString(enemyTypes.size()));
 			
 			ArrayList<Integer> numbers = new ArrayList<Integer>();
-			numbers.add(5);
+			numbers.add(1);
 			Wave wave0 = new Wave(0, enemyTypes, numbers);
 			
 			waveList.add(wave0);
@@ -65,22 +69,21 @@ public class EnemyHandler {
 		
 		Wave wave = waveList.get(waveNumber);
 		// TODO: Add a delay between waves / wait for input
-		ArrayList<ENEMYTYPE> enemies = wave.getEnemies();
+		ArrayList<ENEMYTYPE> enemyTypes = wave.getEnemies();
 		ArrayList<Integer> numbers = wave.getNumbers();
 		int counter = 0;
 		
-		for (ENEMYTYPE enemy : enemies) {
-			singleSummon(enemy, numbers.get(counter));
+		for (ENEMYTYPE enemyType : enemyTypes) {
+			singleSummon(enemyType, numbers.get(counter));
 			counter += 1;
 		}
 	}
 
 	// Summons a single type of enemy a single number of times
-	public void singleSummon(ENEMYTYPE enemy, int number) {
+	public void singleSummon(ENEMYTYPE enemyType, int number) {
 		// TODO: Delay between summons.
-		ENEMYTYPE enemyType = enemy;
 		for (int i = 0; i < number; i += 1) {
-			Enemy tempEnemy = new Enemy(startingTile, enemyType);
+			Enemy tempEnemy = new Enemy(startingTile, enemyType, tweenManager);
 			enemyGroup.addActor(tempEnemy);
 		}
 	}
