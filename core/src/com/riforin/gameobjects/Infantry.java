@@ -16,11 +16,7 @@ public class Infantry extends Tower {
 		textureRegion = AssetLoader.knight;
 
 	}
-
-	public void attack() {
-
-	}
-
+	
 	@Override
 	public void draw(Batch batch, float alpha) {
 

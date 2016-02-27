@@ -6,6 +6,7 @@ import com.riforin.gameobjects.Infantry;
 import com.riforin.gameobjects.Tile;
 import com.riforin.gameobjects.Tile.TILETYPE;
 import com.riforin.gameobjects.Tower;
+import com.riforin.gameobjects.TowerHandler;
 import com.riforin.ui.UIButton.BUTTONTYPE;
 
 public class UIManager {
@@ -17,14 +18,14 @@ public class UIManager {
 	private UIButton newinfantry;
 	private UIButton destroy;
 	private UIButton upgrade;
+	private TowerHandler towerHandler;
 	
 	private Group uiGroup;
-	private Group unitGroup;
 	
-	public UIManager(Group uiGroup, Group unitGroup) {
+	public UIManager(Group uiGroup, TowerHandler towerHandler) {
 		
 		this.uiGroup = uiGroup;
-		this.unitGroup = unitGroup;
+		this.towerHandler = towerHandler;
 		
 		ring = new UIButton(BUTTONTYPE.wheel, this);
 		newtower = new UIButton(BUTTONTYPE.tower, this);
@@ -43,7 +44,7 @@ public class UIManager {
 		uiGroup.addActor(newinfantry);
 		uiGroup.addActor(destroy);
 		uiGroup.addActor(upgrade);
-		
+
 	}
 	
 	public void show(Tile tile) {
@@ -70,11 +71,11 @@ public class UIManager {
 	}
 	
 	public void createTower(Tower tower) {
-		unitGroup.addActor(tower);
+		towerHandler.placeTower(tower);
 	}
 	
 	public void createInfantry(Infantry infantry) {
-		unitGroup.addActor(infantry);
+		towerHandler.placeTower(infantry);
 	}
 	
 	public void openUpgradeMenu() {
@@ -82,7 +83,7 @@ public class UIManager {
 	}
 	
 	public void salvageTower() {
-		// TODO: Destroy the tower and return parts. 
+		// TODO: Destroy the tower and return parts.
 	}
 	
 	public void closeAll() {

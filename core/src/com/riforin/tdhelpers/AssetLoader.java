@@ -26,6 +26,8 @@ public class AssetLoader {
 	// Enemy textures
 	public static TextureRegion flame;
 	
+	// Projectile textures
+	public static TextureRegion bullet;
 	
 	public static void load() {
 		texture = new Texture(Gdx.files.internal("texture.png"));
@@ -41,10 +43,15 @@ public class AssetLoader {
 		wheel = new TextureRegion(texture, 0, 96, 160, 160);
 		nextWave = new TextureRegion(texture, 352, 0, 128, 64);
 		
-		// Loading unit textures. 
+		// Loading tower textures.
 		knight = new TextureRegion(texture, 256, 0, 32, 64);
 		tower = new TextureRegion(texture, 288, 0, 32, 64);
+		
+		// Loading enemy textures.
 		flame = new TextureRegion(texture, 320, 0, 32, 64);
+		
+		// Projectile textures
+		bullet = new TextureRegion(texture, 480, 0, 8, 8);
 	}
 	
 	public static void dispose() {

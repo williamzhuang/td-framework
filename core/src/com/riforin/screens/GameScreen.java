@@ -28,6 +28,7 @@ import com.riforin.gameobjects.EnemyAccessor;
 import com.riforin.gameobjects.Tile;
 import com.riforin.gameobjects.Tile.TILETYPE;
 import com.riforin.gameobjects.TileMap;
+import com.riforin.gameobjects.TowerHandler;
 import com.riforin.gameworld.GameWorld;
 import com.riforin.tdhelpers.AssetLoader;
 import com.riforin.ui.HUD;
@@ -57,10 +58,11 @@ public class GameScreen implements Screen {
 	private Group unitGroup;			// Units.
 	private Group uiGroup;				// Renders ui and backgrounds.
 	
+	private TowerHandler towerHandler;
+	
 	// TODO: Put these two together? 
 	// Issue is that the EnemyTween has to have access to the manager.
 	private EnemyHandler enemyHandler; // Handles enemy pathing/waves.
-	private TweenManager enemyTweenManager;  // Handles the movement of enemies.
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	
@@ -101,16 +103,20 @@ public class GameScreen implements Screen {
 		stage.addActor(uiGroup);
 		
 		Gdx.input.setInputProcessor(stage);
+		
+
+		// Initialize the TowerHandler
+		towerHandler = new TowerHandler(unitGroup);
+		
 		// Initialize the UIManager
-		uiManager = new UIManager(uiGroup, unitGroup);
+		uiManager = new UIManager(uiGroup, towerHandler);
 		
 		// Initialize an empty map and fill it
 		currentMap = new TileMap(25, 15);		
 		loadMap();
 				
 		// Initialize enemy handler.
-		setupEnemyTween();
-		enemyHandler = new EnemyHandler(currentMap, 0, startingTile, enemyGroup, enemyTweenManager);
+		enemyHandler = new EnemyHandler(currentMap, 0, startingTile, enemyGroup);
 				
 		// Initialize the HUD
 		hud = new HUD(uiGroup, enemyHandler); 
@@ -125,8 +131,6 @@ public class GameScreen implements Screen {
 		
 		// Attach the map's level to a renderer.
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-		
-		
 	}
 
 	private void loadMap() {
@@ -180,13 +184,10 @@ public class GameScreen implements Screen {
 		}
 		// Assign directions to every tile.
 		currentMap.assignNextTiles(startingTile);
+		
+		towerHandler.setTileMap(currentMap);
 	}
 	
-	private void setupEnemyTween() {
-		Tween.registerAccessor(Enemy.class, new EnemyAccessor());
-		enemyTweenManager = new TweenManager();
-	}
-
 	@Override
 	public void render(float delta) {
 		runTime += delta;
@@ -198,12 +199,14 @@ public class GameScreen implements Screen {
 		
 		camera.update();
 		
+		//TODO: Alter this to be less contrived.
+		towerHandler.setEnemyList(enemyHandler.getEnemyList());
+		
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 		
 		stage.act(delta);
 		stage.draw();
-		enemyTweenManager.update(delta);
 		
 		
 	}

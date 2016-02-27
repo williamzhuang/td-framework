@@ -1,30 +1,30 @@
 package com.riforin.gameobjects;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+
 /**
  * Handler class that updates and handles turrets.
  * @author William Zhuang
  *
  */
-public class TowerHandler {
+public class TowerHandler extends Actor {
 	
 	public TileMap tileMap;
-	public ArrayList<Tower> turretArray;
-	
+	public ArrayList<Tower> towerList;
+	public ArrayList<Enemy> enemyList;
+	private Group unitGroup;
 	/** 
 	 * TurretHandler constructor. 
 	 * @param tileMap
 	 */
-	public TowerHandler(TileMap tileMap0) {
-		tileMap = tileMap0;
-	}
-	
-	/**
-	 * Updates all turrets and their related properties.
-	 * @param delta
-	 */
-	public void update(float delta) {
-
+	public TowerHandler(Group unitGroup) {
+		this.unitGroup = unitGroup;
+		unitGroup.addActor(this);
+		towerList = new ArrayList<Tower>();
 	}
 	
 	/**
@@ -32,9 +32,29 @@ public class TowerHandler {
 	 * @param x X tile coordinate
 	 * @param y Y tile coordinate
 	 */
-	public void placeTurret(int x, int y, Tower turret) {
-		tileMap.get(x, y).occupy(turret);
-		turretArray.add(turret);
+	public void placeTower(Tower tower) {
+		towerList.add(tower);
+		unitGroup.addActor(tower);
+	}
+	
+	public void act(float delta) {
+		
+		// TODO: Ensure this algorithm allows for the most effective towers.
+		for (Tower tower : towerList) {
+			for (Enemy enemy : enemyList) {
+				if (Intersector.overlaps(tower.getRangeCircle(), enemy.getBoundingCircle())) {
+					tower.setTarget(enemy);
+				}
+			}
+		}
+	}
+	
+	public void setTileMap(TileMap tileMap) {
+		this.tileMap = tileMap;
+	}
+	
+	public void setEnemyList(ArrayList<Enemy> enemyList) {
+		this.enemyList = enemyList;
 	}
 	
 }

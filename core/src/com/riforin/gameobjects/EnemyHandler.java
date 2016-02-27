@@ -17,6 +17,7 @@ import com.riforin.gameobjects.Enemy.ENEMYTYPE;
  * @author William Zhuang
  * 
  */
+
 public class EnemyHandler extends Actor {
 
 	Tile startingTile;
@@ -25,20 +26,21 @@ public class EnemyHandler extends Actor {
 	int startTileY;
 	Group enemyGroup;
 	int waveNumber;
-
+	
+	ArrayList<Enemy> enemyList;
 	ArrayList<Wave> waveList;
 	TweenManager tweenManager;
 
 	// TODO: Some UI Buttons that start the wave.
 	/** EnemyHandler constructor */
 	public EnemyHandler(TileMap tileMap, int mapNumber, Tile startingTile,
-			Group enemyGroup, TweenManager tweenManager) {
+			Group enemyGroup) {
 		this.tileMap = tileMap;
 		this.startingTile = startingTile;
 		startTileX = startingTile.getTileX();
 		startTileY = startingTile.getTileY();
-		this.tweenManager = tweenManager;
-
+		
+		enemyList = new ArrayList<Enemy>();
 		waveList = new ArrayList<Wave>();
 		this.enemyGroup = enemyGroup;
 		
@@ -83,8 +85,13 @@ public class EnemyHandler extends Actor {
 	public void singleSummon(ENEMYTYPE enemyType, int number) {
 		// TODO: Delay between summons.
 		for (int i = 0; i < number; i += 1) {
-			Enemy tempEnemy = new Enemy(startingTile, enemyType, tweenManager);
+			Enemy tempEnemy = new Enemy(startingTile, enemyType, tweenManager, this);
+			enemyList.add(tempEnemy);
 			enemyGroup.addActor(tempEnemy);
 		}
+	}
+	
+	public ArrayList<Enemy> getEnemyList() {
+		return enemyList;
 	}
 }

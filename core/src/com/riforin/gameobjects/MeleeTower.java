@@ -25,11 +25,7 @@ public class MeleeTower extends Tower {
 		}
 		
 		timer -= 1;
-	}
-	
-	public void attack() {
-		// TODO: Find the nearest enemy within range and attack it. 
-	}
+	}	
 	
 	/**
 	 * Updates the turrets properties. 
