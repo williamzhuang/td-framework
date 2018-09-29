@@ -70,6 +70,7 @@ project(":core") {
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.0"
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.0"
         compile "com.underwaterapps.overlap2druntime:overlap2d-runtime-libgdx:0.1.0"
+        compile "org.mini2Dx:universal-tween-engine:6.3.3"
         compile "com.kotcrab.vis:vis-ui:0.7.7"
         compile fileTree(dir: '../lib', include: '*.jar')
     }
